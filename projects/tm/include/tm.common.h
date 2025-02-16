@@ -16,10 +16,14 @@
 #include <assert.h>
 #include <errno.h>
 
+/* Helper Macros - Shared Library Import/Export *******************************/
+
+#define tm_api
+
 /* Helper Macros - Logging ****************************************************/
 
 #define tm_printf(...) fprintf(stdout, __VA_ARGS__)
-#define tm_errorf(...) fprintf(stdout, __VA_ARGS__)
+#define tm_errorf(...) fprintf(stderr, __VA_ARGS__)
 #define tm_perror(msg) perror(msg)
 #define tm_perrorf(...) \
 { \
@@ -39,18 +43,21 @@
     if (!(clause)) \
     { \
         tm_errorf("assertion failure: '%s'!\n", #clause); \
+        tm_trace(); \
         tm_die(); \
     }
 #define tm_expect(clause, ...) \
     if (!(clause)) \
     { \
         tm_errorf(__VA_ARGS__); \
+        tm_trace(); \
         tm_die(); \
     }
 #define tm_expect_p(clause, ...) \
     if (!(clause)) \
     { \
         tm_perrorf(__VA_ARGS__); \
+        tm_trace(); \
         tm_die(); \
     }
 
@@ -230,4 +237,20 @@ enum tm_cpu_instruction_type
     TM_INSTRUCTION_RES = 0x64,
     TM_INSTRUCTION_SWAP = 0x66,
     TM_INSTRUCTION_JPS = 0xFF
+};
+
+enum tm_cpu_error_type
+{
+    TM_ERROR_OK = 0x00,
+    TM_ERROR_HARDWARE,
+    TM_ERROR_BUS_READ,
+    TM_ERROR_BUS_WRITE,
+    TM_ERROR_INVALID_OPCODE,
+    TM_ERROR_READ_ACCESS_VIOLATION,
+    TM_ERROR_WRITE_ACCESS_VIOLATION,
+    TM_ERROR_EXECUTE_ACCESS_VIOLATION,
+    TM_ERROR_DATA_STACK_OVERFLOW,
+    TM_ERROR_DATA_STACK_UNDERFLOW,
+    TM_ERROR_CALL_STACK_OVERFLOW,
+    TM_ERROR_CALL_STACK_UNDERFLOW
 };

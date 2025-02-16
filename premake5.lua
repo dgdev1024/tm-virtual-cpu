@@ -4,6 +4,7 @@
 workspace "project-tm"
     language "C"
     cdialect "C17"
+    flags { "FatalWarnings" }
     location "./generated"
     configurations { "debug", "release", "distribute" }
     filter { "configurations:debug" }

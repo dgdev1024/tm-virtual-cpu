@@ -87,8 +87,13 @@ may be requested by any emulator/hardware powered by the TM CPU.
 | `IME`                 | Interrupt Master Enable   | Bit               | `0b0`                 |
 | `EC`                  | Error Code                | Byte              | `0x00`                |
 | `PC`                  | Program Counter           | Long              | `0x00003000`          |
-| `SP`                  | Stack Pointer             | Word              | `0x0000`              |
-| `RP`                  | Return Pointer            | Word              | `0x0000`              |
+| `SP`                  | Stack Pointer             | Word              | `0xFFFF`              |
+| `RP`                  | Return Pointer            | Word              | `0xFFFF`              |
+| `IA`                  | Inst. Address Register    | Long              | `0x00000000`          |
+| `MA`                  | Memory Address Register   | Long              | `0x00000000`          |
+| `MD`                  | Memory Data Register      | Long              | `0x00000000`          |
+| `CI`                  | Current Instruction Reg.  | Word              | `0xFFFF`              |
+| `DA`                  | Destination Address Flag  | Bit               | `0b0`                 |
 
 #### Notes
 
@@ -96,6 +101,10 @@ may be requested by any emulator/hardware powered by the TM CPU.
   address, `$FFFD0000`.
 - The `RP` register is a word address relative to the start of the call stack's starting address,
   `$FFFE0000`.
+- When data is pushed into the stack, the appropriate stack pointer is first decremented by 4, then
+  the data is written to the stack at the stack pointer's new position.
+- When data is popped from the stack, the data is read from the stack at the stack pointer's current
+  position, then the stack pointer is incremented by 4.
 
 ## Flags Register
 
@@ -240,9 +249,9 @@ flag is set, in order to execute. The execution conditions which can be used are
 | `0x50X0`  | `SLA X`       | `?00?00--`    | Arithmetically left-shifts register `X`.                                              |
 | `0x510X`  | `SLA [X]`     | `?00?00--`    | Arithmetically left-shifts value pointed to by register `X`.                          |
 | `0x52X0`  | `SRA X`       | `?00?00--`    | Arithmetically right-shifts register `X`.                                             |
-| `0x530X`  | `SRA [x]`     | `?00?00--`    | Arithmetically right-shifts value pointed to by register `X`.                         |
+| `0x530X`  | `SRA [X]`     | `?00?00--`    | Arithmetically right-shifts value pointed to by register `X`.                         |
 | `0x54X0`  | `SRL X`       | `?00?00--`    | Logically right-shifts register `X`.                                                  |
-| `0x550X`  | `SRL [x]`     | `?00?00--`    | Logically right-shifts value pointed to by register `X`.                              |
+| `0x550X`  | `SRL [X]`     | `?00?00--`    | Logically right-shifts value pointed to by register `X`.                              |
 | `0x56X0`  | `RL X`        | `?00?00--`    | Rotates register `X` left one bit, through carry.                                     |
 | `0x570X`  | `RL [X]`      | `?00?00--`    | Rotates value pointed to by register `X` left one bit, through carry.                 |
 | `0x58X0`  | `RLC X`       | `?00?00--`    | Rotates register `X` left one bit.                                                    |
