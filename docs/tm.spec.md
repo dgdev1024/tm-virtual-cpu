@@ -89,6 +89,7 @@ may be requested by any emulator/hardware powered by the TM CPU.
 | `PC`                  | Program Counter           | Long              | `0x00003000`          |
 | `SP`                  | Stack Pointer             | Word              | `0xFFFF`              |
 | `RP`                  | Return Pointer            | Word              | `0xFFFF`              |
+| `EA`                  | Error Address Register    | Long              | `0x00000000`          |
 | `IA`                  | Inst. Address Register    | Long              | `0x00000000`          |
 | `MA`                  | Memory Address Register   | Long              | `0x00000000`          |
 | `MD`                  | Memory Data Register      | Long              | `0x00000000`          |
@@ -202,7 +203,10 @@ flag is set, in order to execute. The execution conditions which can be used are
 | `0x24X0`  | `RST X`           | Calls restart vector `X`, starting at address `$00001X00`.                |
 | `0x25X0`  | `RET X`           | Provided condition `X`, returns from current subroutine.                  |
 | `0x2600`  | `RETI`            | Sets the CPU's `IME` register, then returns from current subroutine.      |
-| `0xFFFF`  | `JPS`             | Moves `PC` to its original starting address, `$00003000`.                 |
+| `0x2700`  | `JPS`             | Moves `PC` to its original starting address, `$00003000`.                 |
+
+Any opcode starting with a high byte of `0xFF` will also resolve to a `JPS`
+instruction.
 
 ### Arithmetic Instructions
 
@@ -230,16 +234,16 @@ flag is set, in order to execute. The execution conditions which can be used are
 | Opcode    | Mnemonic      | Flags         | Description                                                                           |
 |-----------|---------------|---------------|---------------------------------------------------------------------------------------|
 | `0x40X0`  | `AND X, I`    | `?01000--`    | Bitwise ANDs accumulator register `X` and immediate value `I`.                        |
-| `0x41X0`  | `AND X, Y`    | `?01000--`    | Bitwise ANDs accumulator register `X` and register `Y`.                               |
+| `0x41XY`  | `AND X, Y`    | `?01000--`    | Bitwise ANDs accumulator register `X` and register `Y`.                               |
 | `0x42XY`  | `AND X, [Y]`  | `?01000--`    | Bitwise ANDs accumulator register `X` and value pointed to by register `Y`.           |
 | `0x43X0`  | `OR X, I`     | `?00000--`    | Bitwise ORs accumulator register `X` and immediate value `I`.                         |
-| `0x44X0`  | `OR X, Y`     | `?00000--`    | Bitwise ORs accumulator register `X` and register `Y`.                                |
+| `0x44XY`  | `OR X, Y`     | `?00000--`    | Bitwise ORs accumulator register `X` and register `Y`.                                |
 | `0x45XY`  | `OR X, [Y]`   | `?00000--`    | Bitwise ORs accumulator register `X` and value pointed to by register `Y`.            |
 | `0x46X0`  | `XOR X, I`    | `?00000--`    | Bitwise XORs accumulator register `X` and immediate value `I`.                        |
-| `0x47X0`  | `XOR X, Y`    | `?00000--`    | Bitwise XORs accumulator register `X` and register `Y`.                               |
+| `0x47XY`  | `XOR X, Y`    | `?00000--`    | Bitwise XORs accumulator register `X` and register `Y`.                               |
 | `0x48XY`  | `XOR X, [Y]`  | `?00000--`    | Bitwise XORs accumulator register `X` and value pointed to by register `Y`.           |
 | `0x49X0`  | `CMP X, I`    | `?1??0?--`    | Compares accumulator register `X` and immediate value `I`.                            |
-| `0x4AX0`  | `CMP X, Y`    | `?1??0?--`    | Compares accumulator register `X` and register `Y`.                                   |
+| `0x4AXY`  | `CMP X, Y`    | `?1??0?--`    | Compares accumulator register `X` and register `Y`.                                   |
 | `0x4BX0`  | `CMP X, [Y]`  | `?1??0?--`    | Compares accumulator register `X` and value pointed to by register `Y`.               |
 
 ### Bit Shifting Instructions

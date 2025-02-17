@@ -3,6 +3,10 @@
 #pragma once
 #include <tm.common.h>
 
+/* Public Constants ***********************************************************/
+
+#define TM_ERROR_STRLEN 512
+
 /* Typedefs and Forward Declarations ******************************************/
 
 typedef struct tm_cpu tm_cpu_t;
@@ -42,3 +46,8 @@ void tm_request_interrupt (tm_cpu_t* p_cpu, byte_t p_id);
 bool tm_cycle_cpu (tm_cpu_t* p_cpu, size_t p_cycle_count);
 bool tm_advance_cpu (tm_cpu_t* p_cpu, size_t p_cycle_count);
 bool tm_step_cpu (tm_cpu_t* p_cpu);
+
+/* Public Functions - Error Checking ******************************************/
+
+bool tm_has_error (tm_cpu_t* p_cpu);
+const char* tm_get_error (tm_cpu_t* p_cpu);
