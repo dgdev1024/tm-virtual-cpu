@@ -26,6 +26,7 @@ typedef enum tmm_token_type
     TMM_TOKEN_HEXADECIMAL,  ///< Hexadecimal number token type.
     TMM_TOKEN_STRING,       ///< String token type.
     TMM_TOKEN_CHARACTER,    ///< Character token type.
+    TMM_TOKEN_PLACEHOLDER,  ///< Placeholder token type.
 
     // Arithmetic Operator Tokens
     TMM_TOKEN_ADD,          ///< Addition token type.
@@ -107,7 +108,12 @@ const char* tmm_stringify_token_type (tmm_token_type_t p_type);
 const char* tmm_stringify_token (const tmm_token_t* p_token);
 bool tmm_is_number_token (const tmm_token_t* p_token);
 bool tmm_is_arithmetic_operator_token (const tmm_token_t* p_token);
+bool tmm_is_additive_operator_token (const tmm_token_t* p_token);
+bool tmm_is_multiplicative_operator_token (const tmm_token_t* p_token);
 bool tmm_is_bitwise_operator_token (const tmm_token_t* p_token);
+bool tmm_is_shift_operator_token (const tmm_token_t* p_token);
+bool tmm_is_relational_operator_token (const tmm_token_t* p_token);
 bool tmm_is_logical_operator_token (const tmm_token_t* p_token);
 bool tmm_is_comparison_operator_token (const tmm_token_t* p_token);
 bool tmm_is_assignment_operator_token (const tmm_token_t* p_token);
+bool tmm_is_unary_operator_token (const tmm_token_t* p_token);

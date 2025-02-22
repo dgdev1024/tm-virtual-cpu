@@ -1,8 +1,10 @@
 #include <tm.arguments.h>
 #include <tmm.lexer.h>
+#include <tmm.parser.h>
 
 static void tmm_atexit ()
 {
+    tmm_shutdown_parser();
     tmm_shutdown_lexer();
     tm_release_arguments ();
 }
@@ -56,6 +58,13 @@ int main (int p_argc, char** p_argv)
     {
         tmm_print_tokens();
         return 0;
+    }
+
+    tmm_init_parser();
+    if (!tmm_parse_tokens(nullptr))
+    {
+        tm_errorf("tmm: failed to parse input file '%s'.\n", l_input_file);
+        return EXIT_FAILURE;
     }
 
     return 0;

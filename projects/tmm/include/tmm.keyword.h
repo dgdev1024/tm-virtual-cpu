@@ -18,18 +18,15 @@ typedef enum tmm_keyword_type
     TMM_KEYWORD_REGISTER,       ///< Register keyword (`a`, `b`, `c`, etc.)
     TMM_KEYWORD_FLAG,           ///< Flag keyword (`z`, `n`, `h`, etc.)
     TMM_KEYWORD_CONDITION,      ///< Condition keyword (`n`, `cs`, `cc`, etc.)
-    TMM_KEYWORD_DATA,           ///< Data command keyword (`byte`, `word`, `long`, etc.)
     TMM_KEYWORD_INSTRUCTION,    ///< Instruction keyword (`nop`, `stop`, etc.)
 } tmm_keyword_type_t;
 
 /* Language Keyword Type Enumeration ******************************************/
 
-enum tmm_language_type
-{
-    TMM_LANGUAGE_LET,       ///< Declare a variable.
-    TMM_LANGUAGE_CONST,     ///< Declare a constant.
-    TMM_LANGUAGE_FUNCTION,  ///< Declare a function.
-};
+// enum tmm_language_type
+// {
+    
+// };
 
 /* Directive Keyword Type Enumeration *****************************************/
 
@@ -38,15 +35,14 @@ enum tmm_directive_type
     TMM_DIRECTIVE_ORG,      ///< Set the origin address.
     TMM_DIRECTIVE_INCLUDE,  ///< Include a file.
     TMM_DIRECTIVE_INCBIN,   ///< Include a binary file.
-};
-
-/* Data Command Keyword Type Enumeration **************************************/
-
-enum tmm_data_command_type
-{
-    TMM_DATA_BYTE,          ///< Define a byte.
-    TMM_DATA_WORD,          ///< Define a word.
-    TMM_DATA_LONG,          ///< Define a long.
+    TMM_DIRECTIVE_BYTE,     ///< Define a byte.
+    TMM_DIRECTIVE_WORD,     ///< Define a word.
+    TMM_DIRECTIVE_LONG,     ///< Define a long.
+    TMM_DIRECTIVE_DEFINE,   ///< Define a macro.
+    TMM_DIRECTIVE_UNDEF,    ///< Undefine a macro.
+    TMM_DIRECTIVE_IF,       ///< Conditional directive.
+    TMM_DIRECTIVE_ELSE,     ///< Conditional directive.
+    TMM_DIRECTIVE_ENDIF,    ///< Conditional directive.
 };
 
 /* Keyword Structure **********************************************************/

@@ -147,7 +147,7 @@ flag is set, in order to execute. The execution conditions which can be used are
 
 | Condition     | Description                                                                   |
 |---------------|-------------------------------------------------------------------------------|
-| `N`           | No condition needs to be fulfilled to execute this instruction.               |
+| `NC`          | No condition needs to be fulfilled to execute this instruction.               |
 | `CS`          | The instruction will executed only if the `C` flag is set.                    |
 | `CC`          | The instruction will executed only if the `C` flag is clear.                  |
 | `ZS`          | The instruction will executed only if the `Z` flag is set.                    |
@@ -196,10 +196,10 @@ flag is set, in order to execute. The execution conditions which can be used are
 
 | Opcode    | Mnemonic          | Description                                                               |
 |-----------|-------------------|---------------------------------------------------------------------------|
-| `0x20X0`  | `JMP X, [A32]`    | Provided condition `X`, moves `PC` to address `A32`.                      |
-| `0x21XY`  | `JMP X, [Y]`      | Provided condition `X`, moves `PC` to address pointed to by register `Y`. |
+| `0x20X0`  | `JMP X, A32`      | Provided condition `X`, moves `PC` to address `A32`.                      |
+| `0x21XY`  | `JMP X, Y`        | Provided condition `X`, moves `PC` to address pointed to by register `Y`. |
 | `0x22X0`  | `JPB X, S16`      | Provided condition `X`, moves `PC` by signed offset `S16`.                |
-| `0x23X0`  | `CALL X, [A32]`   | Provided condition `X`, calls subroutine at address `A32`.                |
+| `0x23X0`  | `CALL X, A32`     | Provided condition `X`, calls subroutine at address `A32`.                |
 | `0x24X0`  | `RST X`           | Calls restart vector `X`, starting at address `$00001X00`.                |
 | `0x25X0`  | `RET X`           | Provided condition `X`, returns from current subroutine.                  |
 | `0x2600`  | `RETI`            | Sets the CPU's `IME` register, then returns from current subroutine.      |

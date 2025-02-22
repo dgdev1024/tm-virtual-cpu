@@ -15,6 +15,7 @@ const char* tmm_stringify_token_type (tmm_token_type_t p_type)
         case TMM_TOKEN_BINARY: return "binary";
         case TMM_TOKEN_OCTAL: return "octal";
         case TMM_TOKEN_HEXADECIMAL: return "hexadecimal";
+        case TMM_TOKEN_PLACEHOLDER: return "placeholder";
         case TMM_TOKEN_STRING: return "string";
         case TMM_TOKEN_CHARACTER: return "character";
         case TMM_TOKEN_ADD: return "add";
@@ -112,6 +113,34 @@ bool tmm_is_arithmetic_operator_token (const tmm_token_t* p_token)
     }
 }
 
+bool tmm_is_additive_operator_token (const tmm_token_t* p_token)
+{
+    tm_expect(p_token != nullptr, "tm: null token!\n");
+    switch (p_token->m_type)
+    {
+        case TMM_TOKEN_ADD:
+        case TMM_TOKEN_SUBTRACT:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool tmm_is_multiplicative_operator_token (const tmm_token_t* p_token)
+{
+    tm_expect(p_token != nullptr, "tm: null token!\n");
+    switch (p_token->m_type)
+    {
+        case TMM_TOKEN_MULTIPLY:
+        case TMM_TOKEN_DIVIDE:
+        case TMM_TOKEN_MODULO:
+        case TMM_TOKEN_EXPONENT:
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool tmm_is_bitwise_operator_token (const tmm_token_t* p_token)
 {
     tm_expect(p_token != nullptr, "tm: null token!\n");
@@ -123,6 +152,36 @@ bool tmm_is_bitwise_operator_token (const tmm_token_t* p_token)
         case TMM_TOKEN_BITWISE_NOT:
         case TMM_TOKEN_BITWISE_LSHIFT:
         case TMM_TOKEN_BITWISE_RSHIFT:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool tmm_is_shift_operator_token (const tmm_token_t* p_token)
+{
+    tm_expect(p_token != nullptr, "tm: null token!\n");
+    switch (p_token->m_type)
+    {
+        case TMM_TOKEN_BITWISE_LSHIFT:
+        case TMM_TOKEN_BITWISE_RSHIFT:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool tmm_is_relational_operator_token (const tmm_token_t* p_token)
+{
+    tm_expect(p_token != nullptr, "tm: null token!\n");
+    switch (p_token->m_type)
+    {
+        case TMM_TOKEN_EQUAL:
+        case TMM_TOKEN_NOT_EQUAL:
+        case TMM_TOKEN_LESS:
+        case TMM_TOKEN_LESS_EQUAL:
+        case TMM_TOKEN_GREATER:
+        case TMM_TOKEN_GREATER_EQUAL:
             return true;
         default:
             return false;
@@ -177,6 +236,21 @@ bool tmm_is_assignment_operator_token (const tmm_token_t* p_token)
         case TMM_TOKEN_XOR_ASSIGN:
         case TMM_TOKEN_LSHIFT_ASSIGN:
         case TMM_TOKEN_RSHIFT_ASSIGN:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool tmm_is_unary_operator_token (const tmm_token_t* p_token)
+{
+    tm_expect(p_token != nullptr, "tm: null token!\n");
+    switch (p_token->m_type)
+    {
+        case TMM_TOKEN_ADD:
+        case TMM_TOKEN_SUBTRACT:
+        case TMM_TOKEN_BITWISE_NOT:
+        case TMM_TOKEN_LOGICAL_NOT:
             return true;
         default:
             return false;

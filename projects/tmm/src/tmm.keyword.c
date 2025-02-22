@@ -7,14 +7,19 @@
 static const tmm_keyword_t TMM_KEYWORDS[] = {
 
     // Language Keywords
-    { "let",        TMM_KEYWORD_LANGUAGE,       TMM_LANGUAGE_LET,       0 },
-    { "const",      TMM_KEYWORD_LANGUAGE,       TMM_LANGUAGE_CONST,     0 },
-    { "function",   TMM_KEYWORD_LANGUAGE,       TMM_LANGUAGE_FUNCTION,  0 },
 
     // Directive Keywords
     { "org",        TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_ORG,      0 },
     { "include",    TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_INCLUDE,  0 },
     { "incbin",     TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_INCBIN,   0 },
+    { "define",     TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_DEFINE,   0 },
+    { "undef",      TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_UNDEF,    0 },
+    { "if",         TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_IF,       0 },
+    { "else",       TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_ELSE,     0 },
+    { "endif",      TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_ENDIF,    0 },
+    { "byte",       TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_BYTE,     0 },
+    { "word",       TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_WORD,     0 },
+    { "long",       TMM_KEYWORD_DIRECTIVE,      TMM_DIRECTIVE_LONG,     0 },
 
     // Register Keywords
     { "a",          TMM_KEYWORD_REGISTER,       TM_REGISTER_A,          0 },
@@ -45,18 +50,13 @@ static const tmm_keyword_t TMM_KEYWORDS[] = {
     { "s",          TMM_KEYWORD_FLAG,           TM_FLAG_S,              0 },
 
     // Condition Keywords
-    { "n",          TMM_KEYWORD_CONDITION,      TM_CONDITION_N,         0 },
+    { "nc",         TMM_KEYWORD_CONDITION,      TM_CONDITION_N,         0 },
     { "cs",         TMM_KEYWORD_CONDITION,      TM_CONDITION_CS,        0 },
     { "cc",         TMM_KEYWORD_CONDITION,      TM_CONDITION_CC,        0 },
     { "zs",         TMM_KEYWORD_CONDITION,      TM_CONDITION_ZS,        0 },
     { "zc",         TMM_KEYWORD_CONDITION,      TM_CONDITION_ZC,        0 },
     { "os",         TMM_KEYWORD_CONDITION,      TM_CONDITION_OS,        0 },
     { "us",         TMM_KEYWORD_CONDITION,      TM_CONDITION_US,        0 },
-
-    // Data Command Keywords
-    { "byte",       TMM_KEYWORD_DATA,           TMM_DATA_BYTE,          0 },
-    { "word",       TMM_KEYWORD_DATA,           TMM_DATA_WORD,          0 },
-    { "long",       TMM_KEYWORD_DATA,           TMM_DATA_LONG,          0 },
 
     // Instruction Keywords
     // The extra parameter is the number of operands required by each instruction.
@@ -147,7 +147,6 @@ const char* tmm_stringify_keyword_type (tmm_keyword_type_t p_type)
         case TMM_KEYWORD_REGISTER:      return "register";
         case TMM_KEYWORD_FLAG:          return "flag";
         case TMM_KEYWORD_CONDITION:     return "condition";
-        case TMM_KEYWORD_DATA:          return "data";
         case TMM_KEYWORD_INSTRUCTION:   return "instruction";
     }
     return "unknown";

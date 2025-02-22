@@ -291,6 +291,8 @@ static bool tmm_collect_number (file_t* p_file, int* p_character)
         {
             return tmm_collect_octal(p_file, p_character);
         }
+
+        ungetc(l_peek, p_file);
     }
 
     char l_buffer[TMM_TOKEN_STRLEN] = { 0 };
@@ -317,6 +319,30 @@ static bool tmm_collect_number (file_t* p_file, int* p_character)
 
     ungetc(*p_character, p_file);
     return tmm_insert_token(TMM_TOKEN_NUMBER, l_buffer);
+}
+
+static bool tmm_collect_placeholder (file_t* p_file, int* p_character)
+{
+    // Advance past the '@'.
+    *p_character = fgetc(p_file);
+
+    char l_buffer[TMM_TOKEN_STRLEN] = { 0 };
+    size_t l_index = 0;
+
+    do
+    {
+        if (l_index >= TMM_TOKEN_STRLEN)
+        {
+            tm_errorf("tmm: placeholder token is too long.\n");
+            return false;
+        }
+
+        l_buffer[l_index++] = (char) *p_character;
+        *p_character = fgetc(p_file);
+    } while (isdigit(*p_character));
+
+    ungetc(*p_character, p_file);
+    return tmm_insert_token(TMM_TOKEN_PLACEHOLDER, l_buffer);
 }
 
 static bool tmm_collect_symbol (file_t* p_file, int* p_character)
@@ -519,7 +545,7 @@ static bool tmm_collect_tokens (file_t* p_file)
         {
             s_lexer.m_current_line++;
             l_line_comment = false;
-            tmm_insert_token(TMM_TOKEN_EOL, nullptr);
+            // tmm_insert_token(TMM_TOKEN_EOL, nullptr);
             continue;
         }
 
@@ -583,6 +609,12 @@ static bool tmm_collect_tokens (file_t* p_file)
         else if (l_character == '\'')
         {
             l_good = tmm_collect_character(p_file, &l_character);
+        }
+
+        // Check for a placeholder.
+        else if (l_character == '@')
+        {
+            l_good = tmm_collect_placeholder(p_file, &l_character);
         }
 
         // Check for a number.
@@ -673,6 +705,97 @@ bool tmm_lex_file (const char* p_filename)
     return l_success;
 }
 
+bool tmm_has_more_tokens ()
+{
+    return 
+        s_lexer.m_token_pointer < s_lexer.m_token_size &&
+        s_lexer.m_tokens[s_lexer.m_token_pointer].m_type != TMM_TOKEN_EOF;
+}
+
+const tmm_token_t* tmm_token_at (size_t p_index)
+{
+    if (p_index < s_lexer.m_token_size)
+    {
+        return &s_lexer.m_tokens[p_index];
+    }
+
+    return &s_lexer.m_tokens[s_lexer.m_token_size - 1];
+}
+
+const tmm_token_t* tmm_advance_token ()
+{
+    if (s_lexer.m_token_pointer < s_lexer.m_token_size)
+    {
+        return &s_lexer.m_tokens[s_lexer.m_token_pointer++];
+    }
+
+    return &s_lexer.m_tokens[s_lexer.m_token_size - 1];
+}
+
+const tmm_token_t* tmm_advance_token_if_type (tmm_token_type_t p_type)
+{
+    if (s_lexer.m_token_pointer < s_lexer.m_token_size)
+    {
+        tmm_token_t* l_token = &s_lexer.m_tokens[s_lexer.m_token_pointer];
+        if (l_token->m_type == p_type)
+        {
+            s_lexer.m_token_pointer++;
+            return l_token;
+        }
+    }
+
+    return nullptr;
+}
+
+const tmm_token_t* tmm_advance_token_if_keyword (tmm_keyword_type_t p_type)
+{
+    if (s_lexer.m_token_pointer < s_lexer.m_token_size)
+    {
+        tmm_token_t* l_token = &s_lexer.m_tokens[s_lexer.m_token_pointer];
+        if (l_token->m_type == TMM_TOKEN_KEYWORD)
+        {
+            const tmm_keyword_t* l_keyword = tmm_lookup_keyword(l_token->m_name, TMM_KEYWORD_NONE);
+            if (l_keyword->m_type == p_type)
+            {
+                s_lexer.m_token_pointer++;
+                return l_token;
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+const tmm_token_t* tmm_peek_token (size_t p_offset)
+{
+    if (s_lexer.m_token_pointer + p_offset < s_lexer.m_token_size)
+    {
+        return &s_lexer.m_tokens[s_lexer.m_token_pointer + p_offset];
+    }
+
+    return &s_lexer.m_tokens[s_lexer.m_token_size - 1];
+}
+
+const tmm_token_t* tmm_current_token ()
+{
+    if (s_lexer.m_token_pointer < s_lexer.m_token_size)
+    {
+        return &s_lexer.m_tokens[s_lexer.m_token_pointer];
+    }
+
+    return &s_lexer.m_tokens[s_lexer.m_token_size - 1];
+}
+
+const tmm_token_t* tmm_previous_token ()
+{
+    if (s_lexer.m_token_pointer > 0)
+    {
+        return &s_lexer.m_tokens[s_lexer.m_token_pointer - 1];
+    }
+
+    return nullptr;
+}
+
 void tmm_print_tokens ()
 {
     for (size_t i = 0; i < s_lexer.m_token_size; ++i)
@@ -685,4 +808,12 @@ void tmm_print_tokens ()
         }
         tm_printf("\n");
     }
+}
+
+void tmm_reset_lexer ()
+{
+    s_lexer.m_token_pointer = 0;
+    s_lexer.m_token_size = 0;
+    s_lexer.m_current_file = nullptr;
+    s_lexer.m_current_line = 0;
 }
